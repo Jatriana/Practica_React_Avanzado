@@ -1,4 +1,5 @@
 import React from 'react';
+import { Provider } from 'react-redux';
 import ReactDOM from 'react-dom';
 import { BrowserRouter as Router } from 'react-router-dom';
 
@@ -14,10 +15,11 @@ configureClient({ accessToken });
 const store = configureStore({ preloadedState: { auth: !!accessToken } });
 console.log(store.getState());
 ReactDOM.render(
-  <React.StrictMode>
+  <Provider store={store}>
     <Router>
-      <App isInitiallyLogged={!!accessToken} />
+      <App />
     </Router>
-  </React.StrictMode>,
+  </Provider>,
+
   document.getElementById('root')
 );

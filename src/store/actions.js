@@ -1,6 +1,6 @@
 import { AUTH_LOGIN, AUTH_LOGOUT } from './types';
 
-export const authlogin = ()=>{
+export const authLogin = ()=>{
     return{
         type:AUTH_LOGIN,
     }
