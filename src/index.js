@@ -9,7 +9,7 @@ const accessToken = storage.get('auth');
 configureClient({ accessToken });
 
 const store = configureStore({
-  preloadedState: { auth: !!accessToken, adverts: [] },
+  preloadedState: { auth: !!accessToken },
 });
 console.log(store.getState());
 ReactDOM.render(<Root store={store}></Root>, document.getElementById('root'));
