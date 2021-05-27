@@ -1,3 +1,3 @@
 export const getIsLogged = (state) => state.auth;
 
-export const getAdverts = (state) => state.adverts;
+export const getAdvertsList = (state) => state.adverts;
