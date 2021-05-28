@@ -4,10 +4,9 @@ import { Redirect } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router';
 import { createAdvert } from '../../../api/adverts';
-import usePromise from '../../../hooks/usePromise';
 import Layout from '../../layout';
 import NewAdvertForm from './NewAdvertForm';
-import { advertsCreated } from '../../../store/actions';
+import { advertCreatedAction } from '../../../store/actions';
 import { getUi } from '../../../store/selectors';
 
 function NewAdvertPage() {
@@ -21,7 +20,7 @@ function NewAdvertPage() {
       console.log('advert', advert.id);
       const id = advert.id;
       history.push(`/adverts/${id}`);
-      dispatch(advertsCreated(advert));
+      dispatch(advertCreatedAction(advert));
     } catch (error) {}
   };
   if (error?.statusCode === 401) {
