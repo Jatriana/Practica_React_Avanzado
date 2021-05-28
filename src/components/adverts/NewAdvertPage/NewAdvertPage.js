@@ -6,7 +6,7 @@ import { useHistory } from 'react-router';
 import { createAdvert } from '../../../api/adverts';
 import Layout from '../../layout';
 import NewAdvertForm from './NewAdvertForm';
-import { advertCreated } from '../../../store/actions';
+import { advertCreatedAction } from '../../../store/actions';
 import { getUi } from '../../../store/selectors';
 
 function NewAdvertPage() {
@@ -19,7 +19,7 @@ function NewAdvertPage() {
       const advert = await createAdvert(newAdvert);
       console.log('advert', advert.id);
       const id = advert.id;
-      dispatch(advertCreated(advert));
+      dispatch(advertCreatedAction(advert));
       history.push(`/adverts/${id}`);
     } catch (error) {}
   };

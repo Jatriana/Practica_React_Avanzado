@@ -7,9 +7,8 @@ import {
   ADVERTS_LOADED_REQUEST,
   ADVERTS_LOADED_SUCCESS,
   ADVERTS_LOADED_FAILURE,
-  ADVERT_CREATED,
-  // ADVERT_CREATED_REQUEST,
-  // ADVERT_CREATED_SUCCESS,
+  ADVERT_CREATED_REQUEST,
+  ADVERT_CREATED_SUCCESS,
   ADVERT_CREATED_FAILURE,
   ADVERT_DELETED_REQUEST,
   ADVERT_DELETED_SUCCESS,
@@ -97,34 +96,34 @@ export const advertLoadAction = () => {
   };
 };
 
-// export const advertCreatedRequest = () => {
-//   return {
-//     type: ADVERT_CREATED_REQUEST,
-//   };
-// };
-export const advertCreated = (advert) => {
+export const advertCreatedRequest = () => {
   return {
-    type: ADVERT_CREATED,
+    type: ADVERT_CREATED_REQUEST,
+  };
+};
+export const advertCreatedSuccess = (advert) => {
+  return {
+    type: ADVERT_CREATED_SUCCESS,
     payload: {
       advert,
     },
   };
 };
 
-// export const advertCreatedFailure = (error) => {
-//   return {
-//     type: ADVERT_CREATED_FAILURE,
-//     payload: error,
-//     error: true,
-//   };
-// };
+export const advertCreatedFailure = (error) => {
+  return {
+    type: ADVERT_CREATED_FAILURE,
+    payload: error,
+    error: true,
+  };
+};
 
-// export const advertCreatedAction = (advert) => {
-//   return async function (dispatch, getState, { api, history }) {
-//     dispatch(advertCreatedRequest());
-//     try {
-//       const advertCreated = await api.adverts.createAdvert(advert);
-//       dispatch(advertCreatedSuccess(advertCreated));
-//     } catch (error) {}
-//   };
-// };
+export const advertCreatedAction = (advert) => {
+  return async function (dispatch, getState, { api, history }) {
+    dispatch(advertCreatedRequest());
+    try {
+      const advertCreated = await api.adverts.createAdvert(advert);
+      dispatch(advertCreatedSuccess(advertCreated));
+    } catch (error) {}
+  };
+};
