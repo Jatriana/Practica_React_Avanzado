@@ -5,10 +5,12 @@ import {
   UI_RESET_ERROR,
   AUTH_LOGOUT,
   ADVERTS_LOADED,
-  ADVERTS_CREATED,
+  ADVERTS_CREATED_REQUEST,
+  ADVERTS_CREATED_SUCCESS,
+  ADVERTS_CREATED_FAILURE,
 } from './types';
 
-import { login } from '../api/auth';
+// import { login } from '../api/auth';
 export const authLoginRequest = () => {
   return {
     type: AUTH_LOGIN_REQUEST,
@@ -28,10 +30,10 @@ export const authLoginFailure = (error) => {
 };
 
 export const loginAction = (credentials, history, location) => {
-  return async function (dispatch, getState) {
+  return async function (dispatch, getState, { api, history }) {
     dispatch(authLoginRequest());
     try {
-      await login(credentials);
+      await api.auth.login(credentials);
       const { from } = location.state || { from: { pathname: '/' } };
       dispatch(authLoginSuccess());
       history.replace(from);
@@ -61,11 +63,28 @@ export const advertsLoaded = (adverts) => {
   };
 };
 
-export const advertsCreated = (advert) => {
+export const advertsCreatedRequest = () => {
   return {
-    type: ADVERTS_CREATED,
+    type: ADVERTS_CREATED_REQUEST,
+  };
+};
+export const advertsCreatedSuccess = (advert) => {
+  return {
+    type: ADVERTS_CREATED_SUCCESS,
     payload: {
       advert,
     },
   };
+};
+
+export const advertsCreatedFailure = (error) => {
+  return {
+    type: ADVERTS_CREATED_FAILURE,
+    payload: error,
+    error: true,
+  };
+};
+
+export const advertsCreateAction = (advert) => {
+  return async function () {};
 };

@@ -1,6 +1,5 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useHistory, useLocation } from 'react-router';
 import T from 'prop-types';
 import LoginForm from './LoginForm';
 import { getUi } from '../../../store/selectors';
@@ -8,12 +7,10 @@ import { loginAction, resetError } from '../../../store/actions';
 
 function LoginPage() {
   const dispatch = useDispatch();
-  const history = useHistory();
-  const location = useLocation();
 
   const { loading, error } = useSelector(getUi);
   const handleSubmit = (credentials) => {
-    dispatch(loginAction(credentials, history, location));
+    dispatch(loginAction(credentials));
   };
   return (
     <div>
