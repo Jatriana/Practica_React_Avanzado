@@ -1,31 +1,43 @@
 import React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useHistory, useLocation } from 'react-router';
 import T from 'prop-types';
-import { authLogin } from '../../../store/actions';
-import usePromise from '../../../hooks/usePromise';
-import { login } from '../../../api/auth';
+import {
+  authLoginRequest,
+  authLoginSuccess,
+  authLoginFailure,
+  resetError,
+} from '../../../store/actions';
+// import usePromise from '../../../hooks/usePromise';
 import LoginForm from './LoginForm';
-import { useDispatch } from 'react-redux';
+import { login } from '../../../api/auth';
+import { getUi } from '../../../store/selectors';
 
-function LoginPage({ location, history }) {
-  const { isPending: isLoading, error, execute, resetError } = usePromise();
+function LoginPage() {
+  // const { isPending: isLoading, error, execute, resetError } = usePromise();
   const dispatch = useDispatch();
-  const onLogin = () => dispatch(authLogin());
+  const history = useHistory();
+  const location = useLocation();
 
-  const handleSubmit = (credentials) => {
-    execute(login(credentials))
-      .then(onLogin())
-      .then(() => {
-        const { from } = location.state || { from: { pathname: '/' } };
-        history.replace(from);
-      });
+  const { loading, error } = useSelector(getUi);
+  const handleSubmit = async (credentials) => {
+    try {
+      dispatch(authLoginRequest());
+
+      await login(credentials);
+      const { from } = location.state || { from: { pathname: '/' } };
+      dispatch(authLoginSuccess());
+      history.replace(from);
+    } catch (error) {
+      dispatch(authLoginFailure(error));
+    }
   };
-
   return (
     <div>
       <LoginForm onSubmit={handleSubmit} />
-      {isLoading && <p>...login in nodepop</p>}
+      {loading && <p>...login in nodepop</p>}
       {error && (
-        <div onClick={resetError} style={{ color: 'red' }}>
+        <div onClick={() => dispatch(resetError())} style={{ color: 'red' }}>
           {error.message}
         </div>
       )}

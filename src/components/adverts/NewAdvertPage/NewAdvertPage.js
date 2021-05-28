@@ -1,24 +1,29 @@
 import React from 'react';
 import T from 'prop-types';
 import { Redirect } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { useHistory } from 'react-router';
 import { createAdvert } from '../../../api/adverts';
 import usePromise from '../../../hooks/usePromise';
 import Layout from '../../layout';
 import NewAdvertForm from './NewAdvertForm';
 import { advertsCreated } from '../../../store/actions';
+import { getUi } from '../../../store/selectors';
 
-function NewAdvertPage({ history }) {
-  const { isPending: isLoading, error, execute } = usePromise(null);
+function NewAdvertPage() {
+  // const { isPending: isLoading, error, execute } = usePromise(null);
   const dispatch = useDispatch();
-
+  const { error } = useSelector(getUi);
+  const history = useHistory();
   const handleSubmit = async (newAdvert) => {
-    const advert = await execute(createAdvert(newAdvert));
-    dispatch(advertsCreated(advert)).the(({ id }) =>
-      history.push(`/adverts/${id}`)
-    );
+    try {
+      const advert = await createAdvert(newAdvert);
+      console.log('advert', advert.id);
+      const id = advert.id;
+      history.push(`/adverts/${id}`);
+      dispatch(advertsCreated(advert));
+    } catch (error) {}
   };
-
   if (error?.statusCode === 401) {
     return <Redirect to="/login" />;
   }

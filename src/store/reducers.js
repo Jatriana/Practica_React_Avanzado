@@ -1,7 +1,10 @@
 import { combineReducers } from 'redux';
 
 import {
-  AUTH_LOGIN,
+  AUTH_LOGIN_REQUEST,
+  AUTH_LOGIN_SUCCESS,
+  AUTH_LOGIN_FAILURE,
+  UI_RESET_ERROR,
   AUTH_LOGOUT,
   ADVERTS_LOADED,
   ADVERTS_CREATED,
@@ -10,12 +13,12 @@ import {
 const initialState = {
   auth: false,
   adverts: [],
-  ui: {},
+  ui: { Loading: false, error: null },
 };
 
 export function auth(state = initialState.auth, action) {
   switch (action.type) {
-    case AUTH_LOGIN:
+    case AUTH_LOGIN_SUCCESS:
       return true;
     case AUTH_LOGOUT:
       return false;
@@ -36,5 +39,25 @@ export function adverts(state = initialState.adverts, action) {
 }
 
 export function ui(state = initialState, action) {
-  return state;
+  if (action.error) {
+    return { ...state, loading: false, error: action.payload };
+  }
+  switch (action.type) {
+    case AUTH_LOGIN_REQUEST:
+      return { ...state, loading: true, error: null };
+
+    case AUTH_LOGIN_SUCCESS:
+      return { ...state, loading: false };
+    case AUTH_LOGIN_FAILURE:
+      return { ...state, loading: false, error: action.payload };
+
+    case UI_RESET_ERROR:
+      return {
+        ...state,
+        error: null,
+      };
+
+    default:
+      return state;
+  }
 }
