@@ -1,5 +1,5 @@
 import ReactDOM from 'react-dom';
-import Root from './Root';
+import Root from './root';
 import { configureClient } from './api/client';
 import storage from './utils/storage';
 import './index.css';
