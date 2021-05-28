@@ -3,10 +3,12 @@ import { combineReducers } from 'redux';
 import {
   AUTH_LOGIN_REQUEST,
   AUTH_LOGIN_SUCCESS,
+  AUTH_LOGIN_FAILURE,
   UI_RESET_ERROR,
   AUTH_LOGOUT,
   ADVERTS_LOADED_REQUEST,
   ADVERTS_LOADED_SUCCESS,
+  ADVERT_CREATED,
   ADVERT_CREATED_REQUEST,
   ADVERT_CREATED_SUCCESS,
   ADVERT_DELETED_REQUEST,
@@ -17,13 +19,9 @@ import {
 
 const initialState = {
   auth: false,
-  adverts: {
-    loaded: false,
-    data: [],
-  },
-  advertCreated: {
-    data: [],
-  },
+  adverts: [],
+  advertCreated: [],
+
   ui: { Loading: false, error: null },
 };
 
@@ -41,7 +39,7 @@ export function auth(state = initialState.auth, action) {
 export function adverts(state = initialState.adverts, action) {
   switch (action.type) {
     case ADVERTS_LOADED_SUCCESS:
-      return [...state.data, action.payload];
+      return action.payload.adverts;
     default:
       return state;
   }
@@ -50,7 +48,7 @@ export function adverts(state = initialState.adverts, action) {
 export function advertCreated(state = initialState.advertCreated, action) {
   switch (action.type) {
     case ADVERT_CREATED_SUCCESS:
-      return [...state.data, action.payload];
+      return [...state.adverts, action.payload.advert];
 
     default:
       return state;
@@ -71,8 +69,8 @@ export function ui(state = initialState, action) {
     case ADVERTS_LOADED_SUCCESS:
     case ADVERT_CREATED_SUCCESS:
       return { ...state, loading: false };
-    // case AUTH_LOGIN_FAILURE:
-    //   return { ...state, loading: false, error: action.payload };
+    case AUTH_LOGIN_FAILURE:
+      return { ...state, loading: false, error: action.payload };
 
     case UI_RESET_ERROR:
       return {

@@ -7,8 +7,9 @@ import {
   ADVERTS_LOADED_REQUEST,
   ADVERTS_LOADED_SUCCESS,
   ADVERTS_LOADED_FAILURE,
-  ADVERT_CREATED_REQUEST,
-  ADVERT_CREATED_SUCCESS,
+  ADVERT_CREATED,
+  // ADVERT_CREATED_REQUEST,
+  // ADVERT_CREATED_SUCCESS,
   ADVERT_CREATED_FAILURE,
   ADVERT_DELETED_REQUEST,
   ADVERT_DELETED_SUCCESS,
@@ -37,13 +38,13 @@ export const authLoginFailure = (error) => {
   };
 };
 
-export const loginAction = (credentials, history, location) => {
+export const loginAction = (credentials, history) => {
   return async function (dispatch, getState, { api, history }) {
     dispatch(authLoginRequest());
     try {
       await api.auth.login(credentials);
-      const { from } = location.state || { from: { pathname: '/' } };
       dispatch(authLoginSuccess());
+      const { from } = history.location.state || { from: { pathname: '/' } };
       history.replace(from);
     } catch (error) {
       dispatch(authLoginFailure(error));
@@ -85,7 +86,7 @@ export const advertsLoadedFailure = (error) => {
 };
 
 export const advertLoadAction = () => {
-  return async function (dispatch, getState, { api, history }) {
+  return async function (dispatch, getState, { api }) {
     dispatch(advertsLoadedRequest());
     try {
       const adverts = await api.adverts.getAdverts();
@@ -96,34 +97,34 @@ export const advertLoadAction = () => {
   };
 };
 
-export const advertCreatedRequest = () => {
+// export const advertCreatedRequest = () => {
+//   return {
+//     type: ADVERT_CREATED_REQUEST,
+//   };
+// };
+export const advertCreated = (advert) => {
   return {
-    type: ADVERT_CREATED_REQUEST,
-  };
-};
-export const advertCreatedSuccess = (advert) => {
-  return {
-    type: ADVERT_CREATED_SUCCESS,
+    type: ADVERT_CREATED,
     payload: {
       advert,
     },
   };
 };
 
-export const advertCreatedFailure = (error) => {
-  return {
-    type: ADVERT_CREATED_FAILURE,
-    payload: error,
-    error: true,
-  };
-};
+// export const advertCreatedFailure = (error) => {
+//   return {
+//     type: ADVERT_CREATED_FAILURE,
+//     payload: error,
+//     error: true,
+//   };
+// };
 
-export const advertCreatedAction = (advert) => {
-  return async function (dispatch, getState, { api, history }) {
-    dispatch(advertCreatedRequest());
-    try {
-      const advertCreated = await api.adverts.createAdvert(advert);
-      dispatch(advertCreatedSuccess(advertCreated));
-    } catch (error) {}
-  };
-};
+// export const advertCreatedAction = (advert) => {
+//   return async function (dispatch, getState, { api, history }) {
+//     dispatch(advertCreatedRequest());
+//     try {
+//       const advertCreated = await api.adverts.createAdvert(advert);
+//       dispatch(advertCreatedSuccess(advertCreated));
+//     } catch (error) {}
+//   };
+// };
