@@ -8,6 +8,7 @@ import {
   ADVERTS_CREATED,
 } from './types';
 
+import { login } from '../api/auth';
 export const authLoginRequest = () => {
   return {
     type: AUTH_LOGIN_REQUEST,
@@ -23,6 +24,20 @@ export const authLoginFailure = (error) => {
     type: AUTH_LOGIN_FAILURE,
     payload: error,
     error: true,
+  };
+};
+
+export const loginAction = (credentials, history, location) => {
+  return async function (dispatch, getState) {
+    dispatch(authLoginRequest());
+    try {
+      await login(credentials);
+      const { from } = location.state || { from: { pathname: '/' } };
+      dispatch(authLoginSuccess());
+      history.replace(from);
+    } catch (error) {
+      dispatch(authLoginFailure(error));
+    }
   };
 };
 
