@@ -19,6 +19,7 @@ import {
 const initialState = {
   auth: false,
   adverts: [],
+  // {loaded:false,data:[]},
   advertCreated: [],
 
   ui: { Loading: false, error: null },
@@ -37,12 +38,19 @@ export function auth(state = initialState.auth, action) {
 
 export function adverts(state = initialState.adverts, action) {
   switch (action.type) {
+
     case ADVERTS_LOADED_SUCCESS:
-      return action.payload.adverts;
+      return action.payload.adverts
+
+      // {...state, loaded:true, data:action.payload};
+    // case ADVERTS_DETAIL_SUCCESS:
+    // default:
+    //   return {...state, loaded:false, data:[...state.data, action.payload]};
     default:
       return state;
   }
 }
+
 
 export function advertCreated(state = initialState.advertCreated, action) {
   switch (action.type) {

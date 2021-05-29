@@ -28,7 +28,7 @@ function AdvertsPage() {
 
   const [filters, setFilters] = React.useState(getFilters);
   const dispatch = useDispatch();
-  const listAdverts = useSelector(getAdvertsList);
+  const adverts = useSelector(getAdvertsList);
 
   React.useEffect(() => {
     dispatch(advertLoadAction());
@@ -43,22 +43,22 @@ function AdvertsPage() {
     return <Redirect to="/login" />;
   }
 
-  const filteredAdverts = filterAdverts(listAdverts, filters);
+  const filteredAdverts = filterAdverts(adverts, filters);
 
   return (
     <Layout>
-      {listAdverts.length > 0 && (
+      {adverts.length > 0 && (
         <FiltersForm
           initialFilters={filters}
           defaultFilters={defaultFilters}
-          prices={listAdverts.map(({ price }) => price)}
+          prices={adverts.map(({ price }) => price)}
           onFilter={setFilters}
         />
       )}
       {filteredAdverts.length ? (
         <AdvertsList adverts={filteredAdverts} />
       ) : (
-        <EmptyList advertsCount={listAdverts.length} />
+        <EmptyList advertsCount={adverts.length} />
       )}
     </Layout>
   );

@@ -1,3 +1,4 @@
+import {getAdvertsLoaded} from './selectors'
 import {
   AUTH_LOGIN_REQUEST,
   AUTH_LOGIN_SUCCESS,
@@ -86,6 +87,10 @@ export const advertsLoadedFailure = (error) => {
 
 export const advertLoadAction = () => {
   return async function (dispatch, getState, { api }) {
+    const advertsLoaded = getAdvertsLoaded(getState());
+		if (advertsLoaded) {
+			return;
+		}
     dispatch(advertsLoadedRequest());
     try {
       const adverts = await api.adverts.getAdverts();
