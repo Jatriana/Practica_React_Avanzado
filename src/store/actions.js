@@ -1,4 +1,4 @@
-import {getAdvertsLoaded} from './selectors'
+import { getAdvertDetail, getAdvertsLoaded } from './selectors';
 import {
   AUTH_LOGIN_REQUEST,
   AUTH_LOGIN_SUCCESS,
@@ -17,6 +17,9 @@ import {
   ADVERT_DETAIL_REQUEST,
   ADVERT_DETAIL_SUCCESS,
   ADVERT_DETAIL_FAILURE,
+  ADVERTS_TAGS_REQUEST,
+  ADVERTS_TAGS_SUCCESS,
+  ADVERTS_TAGS_FAILURE,
 } from './types';
 
 // import { login } from '../api/auth';
@@ -71,9 +74,7 @@ export const advertsLoadedRequest = () => {
 export const advertsLoadedSuccess = (adverts) => {
   return {
     type: ADVERTS_LOADED_SUCCESS,
-    payload: {
-      adverts,
-    },
+    payload: adverts,
   };
 };
 
@@ -85,12 +86,12 @@ export const advertsLoadedFailure = (error) => {
   };
 };
 
-export const advertLoadAction = () => {
+export const advertsLoadAction = () => {
   return async function (dispatch, getState, { api }) {
     const advertsLoaded = getAdvertsLoaded(getState());
-		if (advertsLoaded) {
-			return;
-		}
+    if (advertsLoaded) {
+      return;
+    }
     dispatch(advertsLoadedRequest());
     try {
       const adverts = await api.adverts.getAdverts();
@@ -109,9 +110,7 @@ export const advertCreatedRequest = () => {
 export const advertCreatedSuccess = (advert) => {
   return {
     type: ADVERT_CREATED_SUCCESS,
-    payload: {
-      advert,
-    },
+    payload: advert,
   };
 };
 
@@ -127,14 +126,116 @@ export const advertCreatedAction = (advert) => {
   return async function (dispatch, getState, { api, history }) {
     dispatch(advertCreatedRequest());
     try {
-      const advertCreated = await api.adverts.createAdvert(advert);
-      dispatch(advertCreatedSuccess(advertCreated));
-      console.log('id', advertCreated);
-      const id = advertCreated.id;
-      history.push(`/adverts/${id}`);
-      return advertCreated;
+      const advertCreatedId = await api.adverts.createAdvert(advert);
+      dispatch(advertCreatedSuccess(advertCreatedId));
+      history.push(`/adverts/${advertCreatedId.id}`);
     } catch (error) {
       dispatch(advertCreatedFailure(error));
+    }
+  };
+};
+export const advertsDetailRequest = () => {
+  return {
+    type: ADVERT_DETAIL_REQUEST,
+  };
+};
+
+export const advertsDetailSuccess = (id) => {
+  return {
+    type: ADVERT_DETAIL_SUCCESS,
+    payload: id,
+  };
+};
+
+export const advertsDetailFailure = (error) => {
+  return {
+    type: ADVERT_DETAIL_FAILURE,
+    payload: error,
+    error: true,
+  };
+};
+
+export const advertsDetailAction = (advertId) => {
+  return async function (dispatch, getState, { api, history }) {
+    const advertLoaded = getAdvertDetail(getState(), advertId);
+    if (advertLoaded) {
+      return;
+    }
+    dispatch(advertsDetailRequest());
+    try {
+      const advertDetail = await api.adverts.getAdvert(advertId);
+      console.log(advertDetail);
+      dispatch(advertsDetailSuccess(advertDetail));
+      return advertDetail;
+    } catch (error) {
+      dispatch(advertsDetailFailure(error));
+    }
+  };
+};
+
+export const advertDeletedRequest = () => {
+  return {
+    type: ADVERT_DELETED_REQUEST,
+  };
+};
+
+export const advertDeletedSuccess = (id) => {
+  return {
+    type: ADVERT_DELETED_SUCCESS,
+    payload: id,
+  };
+};
+
+export const advertDeletedFailure = (error) => {
+  return {
+    type: ADVERT_DELETED_FAILURE,
+    payload: error,
+    error: true,
+  };
+};
+
+export const advertDeletedAction = (id) => {
+  return async function (dispatch, getState, { api, history }) {
+    dispatch(advertDeletedRequest());
+    try {
+      const deletedAdvert = await api.adverts.deleteAdvert(id);
+      dispatch(advertDeletedSuccess(deletedAdvert));
+      history.push('/');
+    } catch (error) {
+      dispatch(advertDeletedFailure(error));
+    }
+  };
+};
+
+export const advertsTagsRequest = () => {
+  return {
+    type: ADVERTS_TAGS_REQUEST,
+  };
+};
+export const advertsTagsSuccess = (tags) => {
+  return {
+    type: ADVERTS_TAGS_SUCCESS,
+    payloads: tags,
+  };
+};
+export const advertsTagsFailure = (error) => {
+  return {
+    type: ADVERTS_TAGS_FAILURE,
+    payload: error,
+    error: true,
+  };
+};
+
+export const advertsTagsAction = () => {
+  return async function (dispatch, getState, { api }) {
+    dispatch(advertsTagsRequest());
+    try {
+      const tags = await api.adverts.getTags();
+      console.log('awat', tags);
+
+      console.log(dispatch(advertsTagsSuccess(tags)));
+    } catch (error) {
+      dispatch(advertsTagsFailure(error));
     }
   };
 };

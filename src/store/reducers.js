@@ -3,7 +3,6 @@ import { combineReducers } from 'redux';
 import {
   AUTH_LOGIN_REQUEST,
   AUTH_LOGIN_SUCCESS,
-  AUTH_LOGIN_FAILURE,
   UI_RESET_ERROR,
   AUTH_LOGOUT,
   ADVERTS_LOADED_REQUEST,
@@ -14,13 +13,18 @@ import {
   ADVERT_DELETED_SUCCESS,
   ADVERT_DETAIL_REQUEST,
   ADVERT_DETAIL_SUCCESS,
+  ADVERTS_TAGS_REQUEST,
+  ADVERTS_TAGS_SUCCESS,
 } from './types';
 
 const initialState = {
   auth: false,
-  adverts: [],
-  // {loaded:false,data:[]},
-  advertCreated: [],
+  adverts: {
+    loaded: false,
+    data: [],
+  },
+
+  tags: [],
 
   ui: { Loading: false, error: null },
 };
@@ -38,24 +42,23 @@ export function auth(state = initialState.auth, action) {
 
 export function adverts(state = initialState.adverts, action) {
   switch (action.type) {
-
     case ADVERTS_LOADED_SUCCESS:
-      return action.payload.adverts
+      // return action.payload.adverts
+      return { ...state, loaded: true, data: action.payload };
+    case ADVERT_CREATED_SUCCESS:
+    case ADVERT_CREATED_SUCCESS:
+      // return [...state.adverts, action.payload.advert];
+      return { ...state, loaded: false, data: [...state.data, action.payload] };
 
-      // {...state, loaded:true, data:action.payload};
-    // case ADVERTS_DETAIL_SUCCESS:
-    // default:
-    //   return {...state, loaded:false, data:[...state.data, action.payload]};
     default:
       return state;
   }
 }
 
-
-export function advertCreated(state = initialState.advertCreated, action) {
+export function advertsTags(state = initialState.tags, action) {
   switch (action.type) {
-    case ADVERT_CREATED_SUCCESS:
-      return [...state.adverts, action.payload.advert];
+    case ADVERTS_TAGS_REQUEST:
+      return state.concat(action.payload);
 
     default:
       return state;
@@ -70,14 +73,20 @@ export function ui(state = initialState, action) {
     case AUTH_LOGIN_REQUEST:
     case ADVERTS_LOADED_REQUEST:
     case ADVERT_CREATED_REQUEST:
+    case ADVERT_DETAIL_REQUEST:
+    case ADVERT_DELETED_REQUEST:
+    case ADVERTS_TAGS_REQUEST:
       return { ...state, loading: true, error: null };
 
     case AUTH_LOGIN_SUCCESS:
     case ADVERTS_LOADED_SUCCESS:
     case ADVERT_CREATED_SUCCESS:
+    case ADVERT_DETAIL_SUCCESS:
+    case ADVERT_DELETED_SUCCESS:
+    case ADVERTS_TAGS_SUCCESS:
       return { ...state, loading: false };
-    case AUTH_LOGIN_FAILURE:
-      return { ...state, loading: false, error: action.payload };
+    // case AUTH_LOGIN_FAILURE:
+    //   return { ...state, loading: false, error: action.payload };
 
     case UI_RESET_ERROR:
       return {

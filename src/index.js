@@ -1,6 +1,6 @@
 import ReactDOM from 'react-dom';
-import Root from './root';
 import { createBrowserHistory } from 'history';
+import Root from './root';
 import { configureClient } from './api/client';
 import storage from './utils/storage';
 import configureStore from './store';

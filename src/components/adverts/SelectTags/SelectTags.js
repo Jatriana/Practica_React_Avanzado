@@ -1,16 +1,19 @@
 import React from 'react';
-
+import { useDispatch, useSelector } from 'react-redux';
 import { getTags } from '../../../api/adverts';
 import { CheckboxGroup } from '../../shared';
+import { getAdvertsTags } from '../../../store/selectors';
+import { advertsTagsAction } from '../../../store/actions';
 
 function SelectTags(props) {
-  const [tags, setTags] = React.useState([]);
+  const dispatch = useDispatch();
+  const listTags = useSelector(getAdvertsTags);
+  // const [tags, setTags] = React.useState([]);
+  dispatch(advertsTagsAction());
+  // getTags().then(setTags);
+  React.useEffect(() => {}, []);
 
-  React.useEffect(() => {
-    getTags().then(setTags);
-  }, []);
-
-  return <CheckboxGroup options={tags} {...props} />;
+  return <CheckboxGroup options={listTags} {...props} />;
 }
 
 export default SelectTags;
