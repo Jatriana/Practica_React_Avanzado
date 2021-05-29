@@ -124,6 +124,12 @@ export const advertCreatedAction = (advert) => {
     try {
       const advertCreated = await api.adverts.createAdvert(advert);
       dispatch(advertCreatedSuccess(advertCreated));
-    } catch (error) {}
+      console.log('id', advertCreated);
+      const id = advertCreated.id;
+      history.push(`/adverts/${id}`);
+      return advertCreated;
+    } catch (error) {
+      dispatch(advertCreatedFailure(error));
+    }
   };
 };

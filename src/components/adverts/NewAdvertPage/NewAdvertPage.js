@@ -7,21 +7,24 @@ import { createAdvert } from '../../../api/adverts';
 import Layout from '../../layout';
 import NewAdvertForm from './NewAdvertForm';
 import { advertCreatedAction } from '../../../store/actions';
-import { getUi } from '../../../store/selectors';
+import { getUi, getAdvertsList } from '../../../store/selectors';
 
 function NewAdvertPage() {
   // const { isPending: isLoading, error, execute } = usePromise(null);
   const dispatch = useDispatch();
   const { error } = useSelector(getUi);
-  const history = useHistory();
+  const advertsList = useSelector(getAdvertsList);
+  // const history = useHistory();
   const handleSubmit = async (newAdvert) => {
-    try {
-      const advert = await createAdvert(newAdvert);
-      console.log('advert', advert.id);
-      const id = advert.id;
-      dispatch(advertCreatedAction(advert));
-      history.push(`/adverts/${id}`);
-    } catch (error) {}
+    dispatch(advertCreatedAction(newAdvert));
+
+    //   try {
+    //     const advert = await createAdvert(newAdvert);
+    //     console.log('advert', advert.id);
+    //     const id = advert.id;
+    //     dispatch(advertCreatedAction(advert));
+    //     history.push(`/adverts/${id}`);
+    //   } catch (error) {}
   };
   if (error?.statusCode === 401) {
     return <Redirect to="/login" />;
