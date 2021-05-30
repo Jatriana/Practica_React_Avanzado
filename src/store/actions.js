@@ -226,10 +226,10 @@ export const advertsTagsFailure = (error) => {
 
 export const advertsTagsAction = () => {
   return async function (dispatch, getState, { api }) {
-    // const tagstLoaded = getTagsLoaded(getState());
-    // if (tagstLoaded) {
-    //   return;
-    // }
+    const tagsLoaded = getTagsLoaded(getState());
+    if (tagsLoaded) {
+      return;
+    }
     dispatch(advertsTagsRequest());
     try {
       const tags = await api.adverts.getTags();
