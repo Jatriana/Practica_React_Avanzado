@@ -5,7 +5,6 @@ import * as reducers from './reducers';
 import * as auth from '../api/auth';
 import * as adverts from '../api/adverts';
 
-console.log(adverts)
 const api = { auth, adverts };
 const configureStore = ({ preloadedState, history }) => {
   const middleware = [thunk.withExtraArgument({ api, history })];

@@ -8,6 +8,9 @@ import {
   ADVERTS_LOADED_REQUEST,
   ADVERTS_LOADED_SUCCESS,
   ADVERTS_LOADED_FAILURE,
+  ADVERTS_TAGS_REQUEST,
+  ADVERTS_TAGS_SUCCESS,
+  ADVERTS_TAGS_FAILURE,
   ADVERT_CREATED_REQUEST,
   ADVERT_CREATED_SUCCESS,
   ADVERT_CREATED_FAILURE,
@@ -17,9 +20,6 @@ import {
   ADVERT_DETAIL_REQUEST,
   ADVERT_DETAIL_SUCCESS,
   ADVERT_DETAIL_FAILURE,
-  ADVERTS_TAGS_REQUEST,
-  ADVERTS_TAGS_SUCCESS,
-  ADVERTS_TAGS_FAILURE,
 } from './types';
 
 export const authLoginRequest = () => {
@@ -213,7 +213,7 @@ export const advertsTagsRequest = () => {
 export const advertsTagsSuccess = (tags) => {
   return {
     type: ADVERTS_TAGS_SUCCESS,
-    payloads: tags,
+    payload: tags,
   };
 };
 export const advertsTagsFailure = (error) => {
@@ -225,11 +225,11 @@ export const advertsTagsFailure = (error) => {
 };
 
 export const advertsTagsAction = () => {
-  return async function (dispatch, getState, { api, history }) {
-    const tagstLoaded = getTagsLoaded(getState());
-    if (tagstLoaded) {
-      return;
-    }
+  return async function (dispatch, getState, { api }) {
+    // const tagstLoaded = getTagsLoaded(getState());
+    // if (tagstLoaded) {
+    //   return;
+    // }
     dispatch(advertsTagsRequest());
     try {
       const tags = await api.adverts.getTags();
