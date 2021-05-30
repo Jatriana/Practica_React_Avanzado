@@ -1,4 +1,4 @@
-import { getAdvertDetail, getAdvertsLoaded } from './selectors';
+import { getAdvertDetail, getAdvertsLoaded, getTagsLoaded } from './selectors';
 import {
   AUTH_LOGIN_REQUEST,
   AUTH_LOGIN_SUCCESS,
@@ -22,7 +22,6 @@ import {
   ADVERTS_TAGS_FAILURE,
 } from './types';
 
-// import { login } from '../api/auth';
 export const authLoginRequest = () => {
   return {
     type: AUTH_LOGIN_REQUEST,
@@ -164,7 +163,6 @@ export const advertsDetailAction = (advertId) => {
     dispatch(advertsDetailRequest());
     try {
       const advertDetail = await api.adverts.getAdvert(advertId);
-      console.log(advertDetail);
       dispatch(advertsDetailSuccess(advertDetail));
       return advertDetail;
     } catch (error) {
@@ -227,13 +225,15 @@ export const advertsTagsFailure = (error) => {
 };
 
 export const advertsTagsAction = () => {
-  return async function (dispatch, getState, { api }) {
+  return async function (dispatch, getState, { api, history }) {
+    const tagstLoaded = getTagsLoaded(getState());
+    if (tagstLoaded) {
+      return;
+    }
     dispatch(advertsTagsRequest());
     try {
       const tags = await api.adverts.getTags();
-      console.log('awat', tags);
-
-      console.log(dispatch(advertsTagsSuccess(tags)));
+      dispatch(advertsTagsSuccess(tags));
     } catch (error) {
       dispatch(advertsTagsFailure(error));
     }

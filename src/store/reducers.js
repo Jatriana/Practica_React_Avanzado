@@ -24,7 +24,7 @@ const initialState = {
     data: [],
   },
 
-  tags: [],
+  tags: { loaded: false, data: [] },
 
   ui: { Loading: false, error: null },
 };
@@ -43,11 +43,10 @@ export function auth(state = initialState.auth, action) {
 export function adverts(state = initialState.adverts, action) {
   switch (action.type) {
     case ADVERTS_LOADED_SUCCESS:
-      // return action.payload.adverts
       return { ...state, loaded: true, data: action.payload };
     case ADVERT_CREATED_SUCCESS:
-    case ADVERT_CREATED_SUCCESS:
-      // return [...state.adverts, action.payload.advert];
+    case ADVERT_DETAIL_SUCCESS:
+    case ADVERT_DELETED_SUCCESS:
       return { ...state, loaded: false, data: [...state.data, action.payload] };
 
     default:
@@ -55,10 +54,10 @@ export function adverts(state = initialState.adverts, action) {
   }
 }
 
-export function advertsTags(state = initialState.tags, action) {
+export function tags(state = initialState.tags, action) {
   switch (action.type) {
     case ADVERTS_TAGS_REQUEST:
-      return state.concat(action.payload);
+      return { loaded: true, data: action.payload };
 
     default:
       return state;
@@ -72,21 +71,19 @@ export function ui(state = initialState, action) {
   switch (action.type) {
     case AUTH_LOGIN_REQUEST:
     case ADVERTS_LOADED_REQUEST:
+    case ADVERTS_TAGS_REQUEST:
     case ADVERT_CREATED_REQUEST:
     case ADVERT_DETAIL_REQUEST:
     case ADVERT_DELETED_REQUEST:
-    case ADVERTS_TAGS_REQUEST:
       return { ...state, loading: true, error: null };
 
     case AUTH_LOGIN_SUCCESS:
     case ADVERTS_LOADED_SUCCESS:
+    case ADVERTS_TAGS_SUCCESS:
     case ADVERT_CREATED_SUCCESS:
     case ADVERT_DETAIL_SUCCESS:
     case ADVERT_DELETED_SUCCESS:
-    case ADVERTS_TAGS_SUCCESS:
       return { ...state, loading: false };
-    // case AUTH_LOGIN_FAILURE:
-    //   return { ...state, loading: false, error: action.payload };
 
     case UI_RESET_ERROR:
       return {
